@@ -1,0 +1,432 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--c1:#0F6E56;--c2:#1D9E75;--c3:#E1F5EE;--c4:#085041;--navy:#042C53;--navyL:#185FA5}
+body{font-family:var(--font-sans,'Segoe UI',sans-serif);background:transparent;color:var(--color-text-primary)}
+.app{min-height:600px}
+.topbar{background:var(--navy);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0}
+.logo{color:#fff;font-size:15px;font-weight:500;letter-spacing:.3px}
+.logo span{color:#5DCAA5;font-weight:400}
+.nav{display:flex;gap:4px}
+.nav button{background:transparent;border:none;color:rgba(255,255,255,.65);font-size:12px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:inherit;transition:.15s}
+.nav button.active,.nav button:hover{background:rgba(255,255,255,.12);color:#fff}
+.content{padding:16px}
+.panel{display:none}
+.panel.active{display:block}
+h2{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px}
+.label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+input,select,textarea{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px;font-family:inherit;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--c2)}
+textarea{resize:vertical;min-height:70px}
+.btn{padding:8px 16px;background:var(--c1);color:#fff;border:none;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;transition:.15s}
+.btn:hover{background:var(--c4)}
+.btn-outline{background:transparent;border:0.5px solid var(--color-border-secondary);color:var(--color-text-primary)}
+.btn-outline:hover{background:var(--color-background-secondary)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;text-align:center}
+.metric .num{font-size:22px;font-weight:500;color:var(--c1)}
+.metric .lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.total-box{background:var(--c1);color:#fff;border-radius:var(--border-radius-md);padding:14px;margin-top:12px}
+.total-box .t{font-size:12px;opacity:.8}
+.total-box .v{font-size:24px;font-weight:500;margin-top:2px}
+.item-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.item-row input{flex:1}
+.item-row input.qty{width:70px;flex:none}
+.item-row input.price{width:90px;flex:none}
+.rm{background:transparent;border:none;color:var(--color-text-secondary);font-size:16px;cursor:pointer;padding:0 4px}
+.rm:hover{color:var(--color-text-primary)}
+.check-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:6px;background:var(--color-background-primary);cursor:pointer;transition:.15s}
+.check-item:hover{background:var(--color-background-secondary)}
+.check-item input[type=checkbox]{width:16px;height:16px;flex-none;accent-color:var(--c1)}
+.check-item.done{opacity:.5;text-decoration:line-through}
+.check-item span{font-size:13px;flex:1}
+.badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
+.badge.ok{background:#EAF3DE;color:#3B6D11}
+.badge.pend{background:#FAEEDA;color:#854F0B}
+.badge.alerta{background:#FCEBEB;color:#A32D2D}
+.progress-bar{height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:var(--c2);border-radius:3px;transition:.3s}
+.ai-bubble{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:12px;font-size:13px;line-height:1.6;color:var(--color-text-primary);margin-bottom:10px;max-height:200px;overflow-y:auto}
+.ai-bubble.user{background:var(--c3);color:var(--c4);margin-left:20px}
+.ai-bubble.bot{margin-right:20px}
+.ai-input-row{display:flex;gap:8px;margin-top:10px}
+.ai-input-row input{flex:1}
+.informe-preview{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;font-size:12px;line-height:1.8;color:var(--color-text-secondary);white-space:pre-wrap;max-height:220px;overflow-y:auto}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:14px 0}
+.tabs{display:flex;gap:4px;margin-bottom:14px}
+.tab{font-size:12px;padding:5px 12px;border-radius:6px;border:0.5px solid var(--color-border-tertiary);background:transparent;cursor:pointer;color:var(--color-text-secondary);font-family:inherit}
+.tab.active{background:var(--c1);color:#fff;border-color:var(--c1)}
+.cuenta-table{width:100%;border-collapse:collapse;font-size:12px}
+.cuenta-table th{text-align:left;font-weight:500;padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.cuenta-table td{padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.section-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.8px;color:var(--color-text-secondary);margin-bottom:10px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+
+<div class="app">
+<div class="topbar">
+  <div class="logo">SANTELY <span>· Panel Técnico</span></div>
+  <div class="nav">
+    <button class="active" onclick="go('presupuesto',this)">Presupuesto</button>
+    <button onclick="go('checklist',this)">Checklist</button>
+    <button onclick="go('informe',this)">Informe</button>
+    <button onclick="go('cuenta',this)">Cuenta de cobro</button>
+    <button onclick="go('asistente',this)">Asistente IA</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- PRESUPUESTO -->
+<div id="presupuesto" class="panel active">
+  <div class="grid2" style="margin-bottom:14px">
+    <div>
+      <div class="label">Cliente</div>
+      <input id="cli" placeholder="Nombre del cliente o empresa" />
+    </div>
+    <div>
+      <div class="label">Proyecto</div>
+      <input id="proj" placeholder="Ej: CCTV Edificio Bolívar" />
+    </div>
+  </div>
+  <div class="label">Tipo de sistema</div>
+  <select id="sysType" style="margin-bottom:14px">
+    <option>CCTV / Videovigilancia</option>
+    <option>Red de datos (cableado estructurado)</option>
+    <option>TDT / RITEL</option>
+    <option>Detección de incendio</option>
+    <option>Seguridad electrónica general</option>
+    <option>Telecomunicaciones mixto</option>
+  </select>
+
+  <div class="section-title">Materiales y servicios</div>
+  <div id="items">
+    <div class="item-row"><input placeholder="Descripción" class="desc"/><input class="qty" type="number" placeholder="Cant." value="1" oninput="calcTotal()"/><input class="price" type="number" placeholder="Precio unit." value="0" oninput="calcTotal()"/><button class="rm" onclick="rmRow(this)">×</button></div>
+  </div>
+  <button class="btn btn-outline" style="font-size:12px;padding:5px 12px;margin-top:6px" onclick="addRow()">+ Agregar ítem</button>
+
+  <div class="divider"></div>
+  <div class="label">AIU / Imprevistos (%)</div>
+  <input type="number" id="aiu" value="10" oninput="calcTotal()" style="margin-bottom:10px"/>
+
+  <div class="grid3" style="margin-bottom:8px">
+    <div class="metric"><div class="num" id="subtotal">$0</div><div class="lbl">Subtotal</div></div>
+    <div class="metric"><div class="num" id="aiuVal">$0</div><div class="lbl">AIU</div></div>
+    <div class="metric"><div class="num" id="iva">$0</div><div class="lbl">IVA 19%</div></div>
+  </div>
+  <div class="total-box"><div class="t">Total del presupuesto</div><div class="v" id="total">$0</div></div>
+</div>
+
+<!-- CHECKLIST -->
+<div id="checklist" class="panel">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div>
+      <div class="section-title" style="margin:0">Lista de verificación</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span id="prog-text" style="font-size:12px;color:var(--color-text-secondary)">0 / 0</span>
+      <select id="cat-filter" onchange="renderChecks()" style="font-size:11px;padding:4px 8px;width:auto">
+        <option value="">Todas</option>
+        <option value="RITEL">RITEL</option>
+        <option value="CCTV">CCTV</option>
+        <option value="Red">Red de datos</option>
+        <option value="Incendio">Incendio</option>
+        <option value="General">General</option>
+      </select>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-bar" style="width:0%"></div></div>
+  <div style="height:10px"></div>
+  <div id="check-list"></div>
+  <div style="display:flex;gap:6px;margin-top:12px">
+    <input id="new-check" placeholder="Nueva verificación..." style="flex:1;font-size:12px"/>
+    <select id="new-cat" style="width:110px;font-size:12px">
+      <option>RITEL</option><option>CCTV</option><option>Red</option><option>Incendio</option><option>General</option>
+    </select>
+    <button class="btn" style="padding:6px 12px;font-size:12px" onclick="addCheck()">+</button>
+  </div>
+</div>
+
+<!-- INFORME -->
+<div id="informe" class="panel">
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('ritel',this)">RITEL</button>
+    <button class="tab" onclick="setTab('cctv',this)">CCTV</button>
+    <button class="tab" onclick="setTab('incendio',this)">Incendio</button>
+  </div>
+  <div class="grid2" style="margin-bottom:10px">
+    <div><div class="label">Proyecto / Edificio</div><input id="inf-proj" placeholder="Nombre del proyecto"/></div>
+    <div><div class="label">Fecha de visita</div><input type="date" id="inf-date"/></div>
+  </div>
+  <div class="grid2" style="margin-bottom:10px">
+    <div><div class="label">Supervisor</div><input id="inf-sup" placeholder="Tu nombre"/></div>
+    <div><div class="label">Estado general</div>
+      <select id="inf-estado">
+        <option>Conforme</option><option>En progreso</option><option>No conforme</option><option>Observación</option>
+      </select>
+    </div>
+  </div>
+  <div class="label">Hallazgos / Observaciones</div>
+  <textarea id="inf-obs" placeholder="Describir hallazgos técnicos..." style="margin-bottom:10px"></textarea>
+  <div class="label">Compromisos / Acciones a tomar</div>
+  <textarea id="inf-acc" placeholder="Acciones correctivas o pendientes..." style="margin-bottom:10px"></textarea>
+  <button class="btn" onclick="genInforme()">Generar informe</button>
+  <div class="divider"></div>
+  <div class="informe-preview" id="inf-prev">El informe generado aparecerá aquí.</div>
+</div>
+
+<!-- CUENTA DE COBRO -->
+<div id="cuenta" class="panel">
+  <div class="grid2" style="margin-bottom:10px">
+    <div><div class="label">Nombre / Empresa</div><input id="cc-nom" placeholder="Tu nombre o empresa"/></div>
+    <div><div class="label">NIT / Cédula</div><input id="cc-nit" placeholder="Número de identificación"/></div>
+  </div>
+  <div class="grid2" style="margin-bottom:10px">
+    <div><div class="label">Banco</div><input id="cc-banco" placeholder="Ej: Bancolombia"/></div>
+    <div><div class="label">No. Cuenta</div><input id="cc-cuenta" placeholder="Número de cuenta"/></div>
+  </div>
+  <div class="grid2" style="margin-bottom:10px">
+    <div><div class="label">Cliente / Pagador</div><input id="cc-cliente" placeholder="A quién se cobra"/></div>
+    <div><div class="label">No. de cuenta de cobro</div><input id="cc-num" placeholder="Ej: 001-2025"/></div>
+  </div>
+  <div class="label">Concepto del cobro</div>
+  <textarea id="cc-concepto" placeholder="Ej: Servicios de supervisión e instalación de red de datos..." style="margin-bottom:10px"></textarea>
+  <div class="grid2" style="margin-bottom:10px">
+    <div><div class="label">Valor antes de retención ($)</div><input type="number" id="cc-valor" placeholder="0" oninput="calcCuenta()"/></div>
+    <div><div class="label">Retención en la fuente (%)</div><input type="number" id="cc-ret" value="3.5" oninput="calcCuenta()"/></div>
+  </div>
+  <div class="grid3" style="margin-bottom:12px">
+    <div class="metric"><div class="num" id="cc-bruto">$0</div><div class="lbl">Valor bruto</div></div>
+    <div class="metric"><div class="num" id="cc-retencion">$0</div><div class="lbl">Retención</div></div>
+    <div class="metric"><div class="num" id="cc-neto">$0</div><div class="lbl">Neto a recibir</div></div>
+  </div>
+  <button class="btn" onclick="genCuenta()">Generar cuenta de cobro</button>
+  <div class="divider"></div>
+  <div class="informe-preview" id="cc-prev">La cuenta de cobro aparecerá aquí.</div>
+</div>
+
+<!-- ASISTENTE IA -->
+<div id="asistente" class="panel">
+  <div class="section-title">Consulta técnica con IA</div>
+  <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+    <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="quickQ('¿Cuántas tomas de TV requiere una vivienda tipo 4 bajo RITEL?')">RITEL vivienda T4</button>
+    <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="quickQ('¿Qué cable se usa para CCTV IP en exteriores?')">Cable CCTV exterior</button>
+    <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="quickQ('¿Cuál es la separación máxima entre soportes en canaleta en RITEL Colombia?')">Separación soportes RITEL</button>
+    <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="quickQ('¿Qué EPP debe usar un técnico en instalación de cableado estructurado?')">EPP telecomunicaciones</button>
+  </div>
+  <div id="chat-log" style="max-height:260px;overflow-y:auto;margin-bottom:10px"></div>
+  <div class="ai-input-row">
+    <input id="ai-q" placeholder="Escribe tu consulta técnica..." onkeydown="if(event.key==='Enter')sendAI()"/>
+    <button class="btn" id="ai-btn" onclick="sendAI()">Enviar ↗</button>
+  </div>
+</div>
+
+</div><!-- end content -->
+</div><!-- end app -->
+
+<script>
+function go(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// PRESUPUESTO
+function addRow(){
+  const d=document.getElementById('items');
+  const r=document.createElement('div');
+  r.className='item-row';
+  r.innerHTML='<input placeholder="Descripción" class="desc"/><input class="qty" type="number" placeholder="Cant." value="1" oninput="calcTotal()"/><input class="price" type="number" placeholder="Precio unit." value="0" oninput="calcTotal()"/><button class="rm" onclick="rmRow(this)">×</button>';
+  d.appendChild(r);
+}
+function rmRow(btn){btn.parentElement.remove();calcTotal();}
+function fmt(n){return '$'+Math.round(n).toLocaleString('es-CO');}
+function calcTotal(){
+  let sub=0;
+  document.querySelectorAll('.item-row').forEach(r=>{
+    const q=parseFloat(r.querySelector('.qty').value)||0;
+    const p=parseFloat(r.querySelector('.price').value)||0;
+    sub+=q*p;
+  });
+  const aiu=(parseFloat(document.getElementById('aiu').value)||0)/100;
+  const aiuV=sub*aiu;
+  const base=sub+aiuV;
+  const iva=base*0.19;
+  const tot=base+iva;
+  document.getElementById('subtotal').textContent=fmt(sub);
+  document.getElementById('aiuVal').textContent=fmt(aiuV);
+  document.getElementById('iva').textContent=fmt(iva);
+  document.getElementById('total').textContent=fmt(tot);
+}
+
+// CHECKLIST
+const defaultChecks=[
+  {t:'Planos actualizados y aprobados en sitio',c:'RITEL',done:false},
+  {t:'Canaletas instaladas con separación ≤ 150 cm entre soportes',c:'RITEL',done:false},
+  {t:'Cuarto de telecomunicaciones ventilado y señalizado',c:'RITEL',done:false},
+  {t:'Etiquetado de puntos conforme a planos',c:'RITEL',done:false},
+  {t:'Cámaras instaladas en ángulos de cobertura óptimos',c:'CCTV',done:false},
+  {t:'DVR/NVR energizado y con espacio en disco verificado',c:'CCTV',done:false},
+  {t:'Cable UTP pasado por tubería / canaleta continua',c:'Red',done:false},
+  {t:'Certificación de puntos de datos',c:'Red',done:false},
+  {t:'Detectores de humo instalados conforme a NFPA 72',c:'Incendio',done:false},
+  {t:'Panel de alarma operativo y con batería de respaldo',c:'Incendio',done:false},
+  {t:'Personal con EPP completo en obra',c:'General',done:false},
+  {t:'Área de trabajo despejada y señalizada',c:'General',done:false},
+];
+let checks=[...defaultChecks.map(x=>({...x}))];
+function renderChecks(){
+  const cat=document.getElementById('cat-filter').value;
+  const filtered=checks.filter(c=>!cat||c.c===cat);
+  const done=filtered.filter(c=>c.done).length;
+  document.getElementById('prog-text').textContent=done+' / '+filtered.length;
+  const pct=filtered.length?Math.round(done/filtered.length*100):0;
+  document.getElementById('prog-bar').style.width=pct+'%';
+  const el=document.getElementById('check-list');
+  el.innerHTML='';
+  checks.forEach((ck,i)=>{
+    if(cat&&ck.c!==cat)return;
+    const d=document.createElement('div');
+    d.className='check-item'+(ck.done?' done':'');
+    d.innerHTML='<input type="checkbox"'+(ck.done?' checked':'')+'><span>'+ck.t+'</span><span class="badge '+(ck.done?'ok':'pend')+'">'+ck.c+'</span>';
+    d.querySelector('input').onchange=function(){ck.done=this.checked;renderChecks();};
+    el.appendChild(d);
+  });
+}
+function addCheck(){
+  const v=document.getElementById('new-check').value.trim();
+  if(!v)return;
+  checks.push({t:v,c:document.getElementById('new-cat').value,done:false});
+  document.getElementById('new-check').value='';
+  renderChecks();
+}
+renderChecks();
+
+// INFORME
+let infTab='ritel';
+function setTab(t,btn){infTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function genInforme(){
+  const p=document.getElementById('inf-proj').value||'(sin nombre)';
+  const d=document.getElementById('inf-date').value||new Date().toISOString().split('T')[0];
+  const s=document.getElementById('inf-sup').value||'Supervisor';
+  const e=document.getElementById('inf-estado').value;
+  const o=document.getElementById('inf-obs').value||'Sin observaciones registradas.';
+  const a=document.getElementById('inf-acc').value||'Sin compromisos registrados.';
+  const tit={'ritel':'RITEL / TDT','cctv':'CCTV / Videovigilancia','incendio':'Detección de Incendio'}[infTab];
+  const txt=`INFORME TÉCNICO — ${tit.toUpperCase()}
+${'─'.repeat(42)}
+Proyecto    : ${p}
+Fecha       : ${d}
+Supervisor  : ${s}
+Estado      : ${e}
+
+HALLAZGOS / OBSERVACIONES:
+${o}
+
+ACCIONES / COMPROMISOS:
+${a}
+
+${'─'.repeat(42)}
+Generado por: Panel Técnico Santely SAS`;
+  document.getElementById('inf-prev').textContent=txt;
+}
+
+// CUENTA DE COBRO
+function calcCuenta(){
+  const v=parseFloat(document.getElementById('cc-valor').value)||0;
+  const r=(parseFloat(document.getElementById('cc-ret').value)||0)/100;
+  const ret=v*r;
+  const neto=v-ret;
+  document.getElementById('cc-bruto').textContent=fmt(v);
+  document.getElementById('cc-retencion').textContent=fmt(ret);
+  document.getElementById('cc-neto').textContent=fmt(neto);
+}
+function genCuenta(){
+  const nom=document.getElementById('cc-nom').value||'(Nombre)';
+  const nit=document.getElementById('cc-nit').value||'(ID)';
+  const banco=document.getElementById('cc-banco').value||'(Banco)';
+  const cta=document.getElementById('cc-cuenta').value||'(Cuenta)';
+  const cli=document.getElementById('cc-cliente').value||'(Cliente)';
+  const num=document.getElementById('cc-num').value||'001';
+  const con=document.getElementById('cc-concepto').value||'(Concepto)';
+  const v=parseFloat(document.getElementById('cc-valor').value)||0;
+  const r=(parseFloat(document.getElementById('cc-ret').value)||0)/100;
+  const ret=v*r;
+  const neto=v-ret;
+  const d=new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
+  const txt=`CUENTA DE COBRO No. ${num}
+${'─'.repeat(42)}
+Fecha         : ${d}
+
+COBRADOR:
+  Nombre/Empresa : ${nom}
+  NIT / Cédula   : ${nit}
+  Banco          : ${banco}
+  No. Cuenta     : ${cta}
+
+A CARGO DE:
+  ${cli}
+
+CONCEPTO:
+  ${con}
+
+LIQUIDACIÓN:
+  Valor bruto          : ${fmt(v)}
+  Retención en la fuente: ${fmt(ret)}
+  ─────────────────────────
+  NETO A RECIBIR       : ${fmt(neto)}
+
+${'─'.repeat(42)}
+Firma: _________________________
+       ${nom}`;
+  document.getElementById('cc-prev').textContent=txt;
+}
+
+// ASISTENTE IA
+function addBubble(txt,who){
+  const el=document.getElementById('chat-log');
+  const b=document.createElement('div');
+  b.className='ai-bubble '+who;
+  b.textContent=txt;
+  el.appendChild(b);
+  el.scrollTop=el.scrollHeight;
+  return b;
+}
+function quickQ(q){
+  document.getElementById('ai-q').value=q;
+  sendAI();
+}
+async function sendAI(){
+  const q=document.getElementById('ai-q').value.trim();
+  if(!q)return;
+  document.getElementById('ai-q').value='';
+  addBubble(q,'user');
+  const btn=document.getElementById('ai-btn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Consultando...';
+  const botB=addBubble('...','bot');
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:'Eres un asistente técnico experto en telecomunicaciones, RITEL Colombia, NFPA 72, CCTV, redes de datos y seguridad electrónica. Responde de forma directa, concisa y técnica. Usa viñetas cuando sea útil. Responde en español.',
+        messages:[{role:'user',content:q}]
+      })
+    });
+    const data=await res.json();
+    const txt=data.content?.find(b=>b.type==='text')?.text||'Sin respuesta.';
+    botB.textContent=txt;
+  }catch(e){
+    botB.textContent='Error al consultar. Verifica la conexión.';
+  }
+  btn.disabled=false;
+  btn.innerHTML='Enviar ↗';
+}
+</script>
