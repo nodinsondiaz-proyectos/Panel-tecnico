@@ -1,432 +1,674 @@
-
+<style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Técnico — Santely / Delta</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--c1:#0F6E56;--c2:#1D9E75;--c3:#E1F5EE;--c4:#085041;--navy:#042C53;--navyL:#185FA5}
-body{font-family:var(--font-sans,'Segoe UI',sans-serif);background:transparent;color:var(--color-text-primary)}
-.app{min-height:600px}
-.topbar{background:var(--navy);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0}
-.logo{color:#fff;font-size:15px;font-weight:500;letter-spacing:.3px}
-.logo span{color:#5DCAA5;font-weight:400}
-.nav{display:flex;gap:4px}
-.nav button{background:transparent;border:none;color:rgba(255,255,255,.65);font-size:12px;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:inherit;transition:.15s}
-.nav button.active,.nav button:hover{background:rgba(255,255,255,.12);color:#fff}
-.content{padding:16px}
-.panel{display:none}
-.panel.active{display:block}
-h2{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:12px}
-.label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
-input,select,textarea{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px;font-family:inherit;outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--c2)}
-textarea{resize:vertical;min-height:70px}
-.btn{padding:8px 16px;background:var(--c1);color:#fff;border:none;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;transition:.15s}
-.btn:hover{background:var(--c4)}
-.btn-outline{background:transparent;border:0.5px solid var(--color-border-secondary);color:var(--color-text-primary)}
-.btn-outline:hover{background:var(--color-background-secondary)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px}
-.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;text-align:center}
-.metric .num{font-size:22px;font-weight:500;color:var(--c1)}
-.metric .lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
-.total-box{background:var(--c1);color:#fff;border-radius:var(--border-radius-md);padding:14px;margin-top:12px}
-.total-box .t{font-size:12px;opacity:.8}
-.total-box .v{font-size:24px;font-weight:500;margin-top:2px}
-.item-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.item-row input{flex:1}
-.item-row input.qty{width:70px;flex:none}
-.item-row input.price{width:90px;flex:none}
-.rm{background:transparent;border:none;color:var(--color-text-secondary);font-size:16px;cursor:pointer;padding:0 4px}
-.rm:hover{color:var(--color-text-primary)}
-.check-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:6px;background:var(--color-background-primary);cursor:pointer;transition:.15s}
-.check-item:hover{background:var(--color-background-secondary)}
-.check-item input[type=checkbox]{width:16px;height:16px;flex-none;accent-color:var(--c1)}
-.check-item.done{opacity:.5;text-decoration:line-through}
-.check-item span{font-size:13px;flex:1}
-.badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
-.badge.ok{background:#EAF3DE;color:#3B6D11}
-.badge.pend{background:#FAEEDA;color:#854F0B}
-.badge.alerta{background:#FCEBEB;color:#A32D2D}
-.progress-bar{height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;margin-top:8px}
-.progress-fill{height:100%;background:var(--c2);border-radius:3px;transition:.3s}
-.ai-bubble{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:12px;font-size:13px;line-height:1.6;color:var(--color-text-primary);margin-bottom:10px;max-height:200px;overflow-y:auto}
-.ai-bubble.user{background:var(--c3);color:var(--c4);margin-left:20px}
-.ai-bubble.bot{margin-right:20px}
-.ai-input-row{display:flex;gap:8px;margin-top:10px}
-.ai-input-row input{flex:1}
-.informe-preview{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;font-size:12px;line-height:1.8;color:var(--color-text-secondary);white-space:pre-wrap;max-height:220px;overflow-y:auto}
-.divider{height:0.5px;background:var(--color-border-tertiary);margin:14px 0}
-.tabs{display:flex;gap:4px;margin-bottom:14px}
-.tab{font-size:12px;padding:5px 12px;border-radius:6px;border:0.5px solid var(--color-border-tertiary);background:transparent;cursor:pointer;color:var(--color-text-secondary);font-family:inherit}
-.tab.active{background:var(--c1);color:#fff;border-color:var(--c1)}
-.cuenta-table{width:100%;border-collapse:collapse;font-size:12px}
-.cuenta-table th{text-align:left;font-weight:500;padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
-.cuenta-table td{padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
-.section-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.8px;color:var(--color-text-secondary);margin-bottom:10px}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#F4F5F7;color:#1a1a2e;min-height:100vh}
+.topbar{background:#042C53;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.logo-area{display:flex;align-items:center;gap:10px}
+#logo-img{width:38px;height:38px;border-radius:6px;object-fit:contain;background:#fff;padding:2px;display:none}
+#logo-ph{width:38px;height:38px;border-radius:6px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:18px;color:rgba(255,255,255,.35);cursor:pointer;border:1.5px dashed rgba(255,255,255,.25)}
+#logo-ph:hover{background:rgba(255,255,255,.18)}
+.logo-text{color:#fff;font-size:15px;font-weight:600;line-height:1.2}
+.logo-text small{color:#5DCAA5;font-weight:400;font-size:11px;display:block}
+.csb-row{display:flex;gap:4px}
+.csb{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:rgba(255,255,255,.65);font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:inherit;transition:.15s}
+.csb:hover,.csb.active{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.4)}
+.nav{display:flex;gap:3px;flex-wrap:wrap}
+.nav button{background:transparent;border:none;color:rgba(255,255,255,.55);font-size:11px;padding:6px 11px;border-radius:6px;cursor:pointer;font-family:inherit;transition:.15s;font-weight:500}
+.nav button.active,.nav button:hover{background:rgba(255,255,255,.13);color:#fff}
+.main{max-width:900px;margin:0 auto;padding:20px}
+.panel{display:none}.panel.active{display:block}
+.lbl{font-size:11px;color:#666;margin-bottom:3px;font-weight:500}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:7px;background:#fff;color:#1a1a2e;font-size:13px;font-family:inherit;outline:none;transition:.15s}
+input:focus,select:focus,textarea:focus{border-color:#1D9E75;box-shadow:0 0 0 2px rgba(29,158,117,.12)}
+textarea{resize:vertical;min-height:65px}
+.btn{padding:8px 15px;background:#0F6E56;color:#fff;border:none;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;transition:.15s}
+.btn:hover{background:#085041}
+.btn-blue{background:#185FA5}.btn-blue:hover{background:#0C447C}
+.btn-out{background:#fff;border:1px solid #ccc;color:#333}.btn-out:hover{background:#f5f5f5}
+.btn-red{background:#A32D2D;color:#fff}.btn-red:hover{background:#791F1F}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:14px}
+.metric{background:#F0FAF5;border-radius:8px;padding:12px;text-align:center}
+.metric .num{font-size:18px;font-weight:700;color:#0F6E56}
+.metric .lbl2{font-size:10px;color:#888;margin-top:2px}
+.total-box{background:#0F6E56;color:#fff;border-radius:10px;padding:14px;margin-top:10px}
+.total-box .t{font-size:11px;opacity:.8}
+.total-box .v{font-size:24px;font-weight:700;margin-top:2px}
+.item-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.item-row input{flex:1}.item-row .qty{width:65px;flex:none}.item-row .price{width:95px;flex:none}
+.rm{background:#fff0f0;border:1px solid #fcc;color:#c00;font-size:14px;cursor:pointer;padding:2px 7px;border-radius:5px;font-weight:700}
+.rm:hover{background:#ffe0e0}
+.check-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:5px;background:#fff;cursor:pointer;transition:.12s}
+.check-item:hover{background:#f8f9fa}
+.check-item input[type=checkbox]{width:15px;height:15px;flex:none;accent-color:#0F6E56}
+.check-item.done{opacity:.4}.check-item.done .ct{text-decoration:line-through}
+.ct{font-size:12px;flex:1}
+.badge{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:700;white-space:nowrap}
+.bRITEL{background:#DBEAFE;color:#1d4ed8}.bCCTV{background:#D1FAE5;color:#065f46}
+.bRed{background:#DCFCE7;color:#14532d}.bIncendio{background:#FEE2E2;color:#991b1b}
+.bFibra{background:#EDE9FE;color:#5b21b6}.bAcceso{background:#FEF3C7;color:#92400e}
+.bEPP{background:#FCE7F3;color:#9d174d}.bGeneral{background:#F3F4F6;color:#374151}
+.pb{height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;margin-top:6px}
+.pbf{height:100%;background:#0F6E56;border-radius:3px;transition:.3s}
+.preview{background:#1a1a2e;color:#e2e8f0;border-radius:10px;padding:14px;font-size:11.5px;line-height:1.8;white-space:pre-wrap;max-height:220px;overflow-y:auto;font-family:'Courier New',monospace}
+.divider{height:1px;background:#e5e7eb;margin:14px 0}
+.tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.tab{font-size:11px;padding:5px 11px;border-radius:7px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#666;font-family:inherit;font-weight:500;transition:.12s}
+.tab:hover{background:#f5f5f5}
+.tab.active{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.stitle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#888;margin-bottom:10px}
+.notice{background:#E1F5EE;border-radius:8px;padding:10px 14px;font-size:12px;color:#085041;margin-bottom:12px;border-left:3px solid #0F6E56}
+.ex-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.norma-box{background:#F8F9FA;border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid #e5e7eb}
+.norma-box .nb-t{font-size:12px;font-weight:700;margin-bottom:8px;color:#0F6E56}
+.hdr{background:#F8F9FA;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:11px;border:1px solid #e5e7eb}
+.hdr img{width:36px;height:36px;border-radius:6px;object-fit:contain;background:#fff;padding:1px;display:none;border:1px solid #eee}
+.hdr strong{font-size:13px;font-weight:700;display:block}
+.hdr small{color:#888;font-size:11px}
+.ai-bub{border-radius:10px;padding:10px 13px;font-size:12px;line-height:1.6;margin-bottom:8px}
+.ai-bub.user{background:#E1F5EE;color:#085041;margin-left:20px;border-radius:10px 10px 3px 10px}
+.ai-bub.bot{background:#F8F9FA;margin-right:20px;border:1px solid #e5e7eb;border-radius:10px 10px 10px 3px}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.field-row{margin-bottom:8px}
+h3{font-size:15px;font-weight:700;margin-bottom:12px;color:#042C53}
+.logo-upload-box{width:70px;height:70px;border:2px dashed #ccc;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#f9f9f9;cursor:pointer;overflow:hidden;position:relative}
+.logo-upload-box img{width:100%;height:100%;object-fit:contain;display:none}
+.logo-upload-box:hover{border-color:#0F6E56;background:#f0faf5}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:flex-start}}
 </style>
+</head>
+<body>
 
-<div class="app">
+<input type="file" id="logo-upload" accept="image/*" style="display:none" onchange="uploadLogo(event)">
+
 <div class="topbar">
-  <div class="logo">SANTELY <span>· Panel Técnico</span></div>
+  <div class="logo-area">
+    <div id="logo-ph" onclick="document.getElementById('logo-upload').click()" title="Haz clic para subir logo">📷</div>
+    <img id="logo-img" src="" alt="logo">
+    <div class="logo-text" id="logo-name-el">SANTELY SAS<small id="logo-sub-el">Telecomunicaciones y Seguridad Electrónica</small></div>
+    <div class="csb-row">
+      <button class="csb active" onclick="setEmp('santely',this)">Santely</button>
+      <button class="csb" onclick="setEmp('delta',this)">Delta</button>
+      <button class="csb" onclick="setEmp('custom',this)">+ Otra empresa</button>
+    </div>
+  </div>
   <div class="nav">
-    <button class="active" onclick="go('presupuesto',this)">Presupuesto</button>
-    <button onclick="go('checklist',this)">Checklist</button>
-    <button onclick="go('informe',this)">Informe</button>
-    <button onclick="go('cuenta',this)">Cuenta de cobro</button>
-    <button onclick="go('asistente',this)">Asistente IA</button>
+    <button class="active" onclick="go('perfil',this)">⚙ Perfil</button>
+    <button onclick="go('cot',this)">📋 Cotización</button>
+    <button onclick="go('chk',this)">✅ Checklist</button>
+    <button onclick="go('inf',this)">📄 Informe</button>
+    <button onclick="go('cob',this)">💰 Cobro</button>
+    <button onclick="go('ia',this)">🤖 Asistente IA</button>
   </div>
 </div>
 
-<div class="content">
+<div class="main">
 
-<!-- PRESUPUESTO -->
-<div id="presupuesto" class="panel active">
-  <div class="grid2" style="margin-bottom:14px">
-    <div>
-      <div class="label">Cliente</div>
-      <input id="cli" placeholder="Nombre del cliente o empresa" />
+<!-- PERFIL -->
+<div id="perfil" class="panel active">
+  <div class="card">
+    <h3>Perfil de empresa</h3>
+    <div class="notice">Empresa activa: <strong id="emp-act">SANTELY SAS</strong> — Datos aplicados automáticamente en todos los documentos.</div>
+
+    <div class="field-row">
+      <div class="lbl">Logo de empresa</div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="logo-upload-box" onclick="document.getElementById('logo-upload').click()">
+          <img id="logo-box-img" src="" alt="">
+          <span id="logo-box-txt" style="font-size:11px;color:#aaa;text-align:center;padding:5px">+ Logo<br>PNG/JPG</span>
+        </div>
+        <div>
+          <div style="font-size:12px;color:#555">El logo aparece en documentos exportados (PDF / Word).</div>
+          <div id="logo-status" style="font-size:11px;color:#0F6E56;margin-top:4px"></div>
+          <button class="btn btn-out" style="font-size:11px;padding:4px 10px;margin-top:6px" onclick="document.getElementById('logo-upload').click()">Cambiar logo</button>
+        </div>
+      </div>
     </div>
-    <div>
-      <div class="label">Proyecto</div>
-      <input id="proj" placeholder="Ej: CCTV Edificio Bolívar" />
+
+    <div class="divider"></div>
+
+    <div class="g2" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Nombre / Razón social *</div><input id="p-nombre" value="SANTELY SAS" oninput="syncP()"/></div>
+      <div class="field-row"><div class="lbl">NIT</div><input id="p-nit" placeholder="900.XXX.XXX-X" oninput="syncP()"/></div>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Teléfono</div><input id="p-tel" placeholder="+57 300 XXX XXXX" oninput="syncP()"/></div>
+      <div class="field-row"><div class="lbl">Correo electrónico</div><input id="p-email" placeholder="contacto@empresa.com" oninput="syncP()"/></div>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Ciudad</div><input id="p-ciudad" placeholder="Ibagué, Tolima" oninput="syncP()"/></div>
+      <div class="field-row"><div class="lbl">Dirección</div><input id="p-dir" placeholder="Calle / Carrera" oninput="syncP()"/></div>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Representante legal</div><input id="p-rep" placeholder="Nombre completo" oninput="syncP()"/></div>
+      <div class="field-row"><div class="lbl">Cargo</div><input id="p-cargo" value="Supervisor General" oninput="syncP()"/></div>
+    </div>
+    <div class="field-row" style="margin-bottom:14px"><div class="lbl">Eslogan / Descripción</div><input id="p-slogan" value="Telecomunicaciones y Seguridad Electrónica" oninput="syncP()"/></div>
+
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn" onclick="guardarP()">💾 Guardar perfil</button>
+      <button class="btn btn-out" onclick="go('cot',document.querySelectorAll('.nav button')[1])">Ir a Cotización →</button>
+      <span id="save-ok" style="font-size:12px;color:#0F6E56;display:none">✓ Perfil guardado.</span>
     </div>
   </div>
-  <div class="label">Tipo de sistema</div>
-  <select id="sysType" style="margin-bottom:14px">
-    <option>CCTV / Videovigilancia</option>
-    <option>Red de datos (cableado estructurado)</option>
-    <option>TDT / RITEL</option>
-    <option>Detección de incendio</option>
-    <option>Seguridad electrónica general</option>
-    <option>Telecomunicaciones mixto</option>
-  </select>
+</div>
 
-  <div class="section-title">Materiales y servicios</div>
-  <div id="items">
-    <div class="item-row"><input placeholder="Descripción" class="desc"/><input class="qty" type="number" placeholder="Cant." value="1" oninput="calcTotal()"/><input class="price" type="number" placeholder="Precio unit." value="0" oninput="calcTotal()"/><button class="rm" onclick="rmRow(this)">×</button></div>
+<!-- COTIZACIÓN -->
+<div id="cot" class="panel">
+  <div class="card">
+    <div class="hdr">
+      <img id="hdr-logo-cot" src="" alt="logo">
+      <div><strong id="hdr-nom-cot">SANTELY SAS</strong><small id="hdr-dat-cot">Completa el perfil de empresa para ver los datos aquí.</small></div>
+    </div>
+
+    <div class="g2" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Cliente</div><input id="cli" placeholder="Nombre cliente o empresa"/></div>
+      <div class="field-row"><div class="lbl">Proyecto</div><input id="proj" placeholder="Ej: CCTV Edificio Bolívar, Piso 3"/></div>
+    </div>
+    <div class="g3" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">No. cotización</div><input id="cot-num" placeholder="COT-001-2025"/></div>
+      <div class="field-row"><div class="lbl">Fecha</div><input type="date" id="cot-fecha"/></div>
+      <div class="field-row"><div class="lbl">Validez de oferta</div><input id="cot-val" placeholder="30 días"/></div>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Tipo de sistema</div>
+        <select id="sys">
+          <option>CCTV / Videovigilancia</option>
+          <option>Red de datos (cableado estructurado)</option>
+          <option>TDT / RITEL</option>
+          <option>Detección y alarma de incendio</option>
+          <option>Control de acceso</option>
+          <option>Fibra óptica</option>
+          <option>Telecomunicaciones mixto</option>
+          <option>Seguridad electrónica integral</option>
+        </select>
+      </div>
+      <div class="field-row"><div class="lbl">Forma de pago</div><input id="cot-pago" placeholder="Ej: 50% anticipo / 50% entrega"/></div>
+    </div>
+
+    <div class="stitle">Ítems de la cotización</div>
+    <div style="display:grid;grid-template-columns:1fr 70px 100px 36px;gap:6px;margin-bottom:6px">
+      <div style="font-size:10px;font-weight:700;color:#888">DESCRIPCIÓN</div>
+      <div style="font-size:10px;font-weight:700;color:#888;text-align:center">CANT.</div>
+      <div style="font-size:10px;font-weight:700;color:#888;text-align:right">VR. UNIT.</div>
+      <div></div>
+    </div>
+    <div id="items">
+      <div class="item-row"><input placeholder="Ej: Cámara IP 4MP domo exterior" class="desc"/><input class="qty" type="number" value="1" min="0" oninput="calcT()"/><input class="price" type="number" value="0" min="0" oninput="calcT()"/><button class="rm" onclick="this.parentElement.remove();calcT()">✕</button></div>
+    </div>
+    <button class="btn btn-out" style="font-size:11px;padding:5px 12px;margin-top:6px" onclick="addRow()">+ Agregar ítem</button>
+
+    <div class="divider"></div>
+    <div class="g3" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">AIU / Imprevistos (%)</div><input type="number" id="aiu" value="10" min="0" max="100" oninput="calcT()"/></div>
+      <div class="field-row"><div class="lbl">Descuento (%)</div><input type="number" id="desc-pct" value="0" min="0" max="100" oninput="calcT()"/></div>
+      <div class="field-row"><div class="lbl">Incluir IVA 19%</div><select id="incluir-iva" onchange="calcT()"><option value="1">Sí</option><option value="0">No</option></select></div>
+    </div>
+
+    <div class="g4" style="margin-bottom:10px">
+      <div class="metric"><div class="num" id="sub">$0</div><div class="lbl2">Subtotal</div></div>
+      <div class="metric"><div class="num" id="aiuv">$0</div><div class="lbl2">AIU</div></div>
+      <div class="metric"><div class="num" id="ivav">$0</div><div class="lbl2">IVA 19%</div></div>
+      <div class="metric"><div class="num" id="totv" style="color:#042C53;font-size:20px">$0</div><div class="lbl2">TOTAL</div></div>
+    </div>
+    <div class="field-row"><div class="lbl">Observaciones / Alcance</div><textarea id="cot-obs" placeholder="Incluye mano de obra, materiales y garantía de X meses..."></textarea></div>
+
+    <div class="ex-row">
+      <button class="btn" onclick="previewCot()">👁 Vista previa</button>
+      <button class="btn btn-blue" onclick="doExport('cotizacion','pdf')">⬇ Exportar PDF</button>
+      <button class="btn btn-blue" onclick="doExport('cotizacion','word')">⬇ Exportar Word</button>
+    </div>
+    <div class="divider"></div>
+    <div class="preview" id="cot-prev">La cotización aparecerá aquí. Completa los datos y haz clic en "Vista previa".</div>
   </div>
-  <button class="btn btn-outline" style="font-size:12px;padding:5px 12px;margin-top:6px" onclick="addRow()">+ Agregar ítem</button>
-
-  <div class="divider"></div>
-  <div class="label">AIU / Imprevistos (%)</div>
-  <input type="number" id="aiu" value="10" oninput="calcTotal()" style="margin-bottom:10px"/>
-
-  <div class="grid3" style="margin-bottom:8px">
-    <div class="metric"><div class="num" id="subtotal">$0</div><div class="lbl">Subtotal</div></div>
-    <div class="metric"><div class="num" id="aiuVal">$0</div><div class="lbl">AIU</div></div>
-    <div class="metric"><div class="num" id="iva">$0</div><div class="lbl">IVA 19%</div></div>
-  </div>
-  <div class="total-box"><div class="t">Total del presupuesto</div><div class="v" id="total">$0</div></div>
 </div>
 
 <!-- CHECKLIST -->
-<div id="checklist" class="panel">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-    <div>
-      <div class="section-title" style="margin:0">Lista de verificación</div>
+<div id="chk" class="panel">
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div>
+        <h3 style="margin:0">Checklist de verificación de obra</h3>
+        <div style="font-size:12px;color:#888;margin-top:2px">Progreso: <span id="prog-txt">0/0 ítems</span></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <select id="cat-f" onchange="renderChk()" style="font-size:11px;padding:5px 9px;width:auto">
+          <option value="">Todas las categorías</option>
+          <option>RITEL</option><option>CCTV</option><option>Red</option>
+          <option>Incendio</option><option>Fibra</option><option>Acceso</option>
+          <option>EPP</option><option>General</option>
+        </select>
+        <button class="btn btn-blue" style="font-size:11px;padding:5px 11px" onclick="doExport('checklist','pdf')">⬇ PDF</button>
+        <button class="btn btn-out" style="font-size:11px;padding:5px 11px" onclick="resetChk()">↺ Resetear</button>
+      </div>
     </div>
-    <div style="display:flex;gap:6px;align-items:center">
-      <span id="prog-text" style="font-size:12px;color:var(--color-text-secondary)">0 / 0</span>
-      <select id="cat-filter" onchange="renderChecks()" style="font-size:11px;padding:4px 8px;width:auto">
-        <option value="">Todas</option>
-        <option value="RITEL">RITEL</option>
-        <option value="CCTV">CCTV</option>
-        <option value="Red">Red de datos</option>
-        <option value="Incendio">Incendio</option>
-        <option value="General">General</option>
+    <div class="pb"><div class="pbf" id="prog-bar" style="width:0%"></div></div>
+    <div style="height:10px"></div>
+    <div id="chk-list" style="max-height:400px;overflow-y:auto"></div>
+    <div class="divider"></div>
+    <div style="display:flex;gap:6px">
+      <input id="new-chk" placeholder="Nueva verificación personalizada..." style="flex:1;font-size:12px"/>
+      <select id="new-cat" style="width:100px;font-size:11px">
+        <option>RITEL</option><option>CCTV</option><option>Red</option><option>Incendio</option>
+        <option>Fibra</option><option>Acceso</option><option>EPP</option><option>General</option>
       </select>
+      <button class="btn" style="padding:6px 13px" onclick="addChk()">+ Agregar</button>
     </div>
-  </div>
-  <div class="progress-bar"><div class="progress-fill" id="prog-bar" style="width:0%"></div></div>
-  <div style="height:10px"></div>
-  <div id="check-list"></div>
-  <div style="display:flex;gap:6px;margin-top:12px">
-    <input id="new-check" placeholder="Nueva verificación..." style="flex:1;font-size:12px"/>
-    <select id="new-cat" style="width:110px;font-size:12px">
-      <option>RITEL</option><option>CCTV</option><option>Red</option><option>Incendio</option><option>General</option>
-    </select>
-    <button class="btn" style="padding:6px 12px;font-size:12px" onclick="addCheck()">+</button>
   </div>
 </div>
 
 <!-- INFORME -->
-<div id="informe" class="panel">
-  <div class="tabs">
-    <button class="tab active" onclick="setTab('ritel',this)">RITEL</button>
-    <button class="tab" onclick="setTab('cctv',this)">CCTV</button>
-    <button class="tab" onclick="setTab('incendio',this)">Incendio</button>
-  </div>
-  <div class="grid2" style="margin-bottom:10px">
-    <div><div class="label">Proyecto / Edificio</div><input id="inf-proj" placeholder="Nombre del proyecto"/></div>
-    <div><div class="label">Fecha de visita</div><input type="date" id="inf-date"/></div>
-  </div>
-  <div class="grid2" style="margin-bottom:10px">
-    <div><div class="label">Supervisor</div><input id="inf-sup" placeholder="Tu nombre"/></div>
-    <div><div class="label">Estado general</div>
-      <select id="inf-estado">
-        <option>Conforme</option><option>En progreso</option><option>No conforme</option><option>Observación</option>
-      </select>
+<div id="inf" class="panel">
+  <div class="card">
+    <h3>Informe técnico por norma</h3>
+    <div class="tabs">
+      <button class="tab active" onclick="setTab('ritel',this)">📡 RITEL/TDT</button>
+      <button class="tab" onclick="setTab('cctv',this)">📹 CCTV</button>
+      <button class="tab" onclick="setTab('incendio',this)">🔥 NFPA 72</button>
+      <button class="tab" onclick="setTab('datos',this)">🌐 TIA-568</button>
+      <button class="tab" onclick="setTab('acceso',this)">🔐 Control Acceso</button>
+      <button class="tab" onclick="setTab('fibra',this)">💡 Fibra óptica</button>
     </div>
+
+    <div class="g3" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Proyecto / Edificio</div><input id="inf-proj" placeholder="Nombre del proyecto"/></div>
+      <div class="field-row"><div class="lbl">Fecha de visita</div><input type="date" id="inf-date"/></div>
+      <div class="field-row"><div class="lbl">Supervisor</div><input id="inf-sup" placeholder="Tu nombre"/></div>
+    </div>
+    <div class="g4" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Estado general</div>
+        <select id="inf-est">
+          <option>Conforme</option><option>En progreso</option><option>No conforme</option><option>Observación</option>
+        </select>
+      </div>
+      <div class="field-row"><div class="lbl">% Avance de obra</div><input type="number" id="inf-av" placeholder="0–100" min="0" max="100"/></div>
+      <div class="field-row"><div class="lbl">Contrato / OT No.</div><input id="inf-ot" placeholder="No. de contrato"/></div>
+      <div class="field-row"><div class="lbl">Próxima visita</div><input type="date" id="inf-nv"/></div>
+    </div>
+
+    <div id="norma-fields"></div>
+
+    <div class="field-row" style="margin-bottom:8px"><div class="lbl">Hallazgos / Observaciones técnicas</div><textarea id="inf-obs" placeholder="Describir hallazgos, no conformidades o puntos críticos observados en sitio..."></textarea></div>
+    <div class="field-row" style="margin-bottom:12px"><div class="lbl">Compromisos / Acciones correctivas</div><textarea id="inf-acc" placeholder="Listar acciones a tomar, responsable y fecha límite..."></textarea></div>
+
+    <div class="ex-row">
+      <button class="btn" onclick="previewInf()">👁 Vista previa</button>
+      <button class="btn btn-blue" onclick="doExport('informe','pdf')">⬇ Exportar PDF</button>
+      <button class="btn btn-blue" onclick="doExport('informe','word')">⬇ Exportar Word</button>
+    </div>
+    <div class="divider"></div>
+    <div class="preview" id="inf-prev">Selecciona la norma, completa los campos y haz clic en "Vista previa".</div>
   </div>
-  <div class="label">Hallazgos / Observaciones</div>
-  <textarea id="inf-obs" placeholder="Describir hallazgos técnicos..." style="margin-bottom:10px"></textarea>
-  <div class="label">Compromisos / Acciones a tomar</div>
-  <textarea id="inf-acc" placeholder="Acciones correctivas o pendientes..." style="margin-bottom:10px"></textarea>
-  <button class="btn" onclick="genInforme()">Generar informe</button>
-  <div class="divider"></div>
-  <div class="informe-preview" id="inf-prev">El informe generado aparecerá aquí.</div>
 </div>
 
 <!-- CUENTA DE COBRO -->
-<div id="cuenta" class="panel">
-  <div class="grid2" style="margin-bottom:10px">
-    <div><div class="label">Nombre / Empresa</div><input id="cc-nom" placeholder="Tu nombre o empresa"/></div>
-    <div><div class="label">NIT / Cédula</div><input id="cc-nit" placeholder="Número de identificación"/></div>
+<div id="cob" class="panel">
+  <div class="card">
+    <div class="hdr">
+      <img id="hdr-logo-cob" src="" alt="logo">
+      <div><strong id="hdr-nom-cob">SANTELY SAS</strong><small id="hdr-dat-cob">Datos tomados del perfil de empresa.</small></div>
+    </div>
+
+    <div class="g3" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">No. cuenta de cobro</div><input id="cc-num" placeholder="CC-001-2025"/></div>
+      <div class="field-row"><div class="lbl">Fecha</div><input type="date" id="cc-fecha"/></div>
+      <div class="field-row"><div class="lbl">Ciudad de expedición</div><input id="cc-ciudad" placeholder="Ibagué"/></div>
+    </div>
+    <div class="g2" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Cliente / Empresa pagadora</div><input id="cc-cli" placeholder="Nombre del pagador"/></div>
+      <div class="field-row"><div class="lbl">NIT del pagador</div><input id="cc-nit-cli" placeholder="NIT empresa pagadora"/></div>
+    </div>
+    <div class="g3" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Banco</div><input id="cc-banco" placeholder="Ej: Bancolombia"/></div>
+      <div class="field-row"><div class="lbl">No. de cuenta</div><input id="cc-cta" placeholder="Número de cuenta"/></div>
+      <div class="field-row"><div class="lbl">Tipo de cuenta</div><select id="cc-tipo"><option>Ahorros</option><option>Corriente</option></select></div>
+    </div>
+    <div class="field-row" style="margin-bottom:10px"><div class="lbl">Concepto del cobro</div><textarea id="cc-con" placeholder="Ej: Servicios de supervisión, instalación y certificación de red de datos estructurada..."></textarea></div>
+    <div class="g3" style="margin-bottom:10px">
+      <div class="field-row"><div class="lbl">Valor bruto ($)</div><input type="number" id="cc-val" placeholder="0" oninput="calcCC()"/></div>
+      <div class="field-row"><div class="lbl">Retención en la fuente (%)</div><input type="number" id="cc-ret" value="3.5" step="0.5" oninput="calcCC()"/></div>
+      <div class="field-row"><div class="lbl">Otras deducciones ($)</div><input type="number" id="cc-ded" value="0" oninput="calcCC()"/></div>
+    </div>
+    <div class="g3" style="margin-bottom:12px">
+      <div class="metric"><div class="num" id="cc-b">$0</div><div class="lbl2">Valor bruto</div></div>
+      <div class="metric"><div class="num" id="cc-r">$0</div><div class="lbl2">Retención</div></div>
+      <div class="metric"><div class="num" id="cc-n" style="color:#042C53;font-size:20px">$0</div><div class="lbl2">Neto a recibir</div></div>
+    </div>
+
+    <div class="ex-row">
+      <button class="btn" onclick="previewCC()">👁 Vista previa</button>
+      <button class="btn btn-blue" onclick="doExport('cuenta','pdf')">⬇ Exportar PDF</button>
+      <button class="btn btn-blue" onclick="doExport('cuenta','word')">⬇ Exportar Word</button>
+    </div>
+    <div class="divider"></div>
+    <div class="preview" id="cc-prev">La cuenta de cobro aparecerá aquí. Completa los datos y haz clic en "Vista previa".</div>
   </div>
-  <div class="grid2" style="margin-bottom:10px">
-    <div><div class="label">Banco</div><input id="cc-banco" placeholder="Ej: Bancolombia"/></div>
-    <div><div class="label">No. Cuenta</div><input id="cc-cuenta" placeholder="Número de cuenta"/></div>
-  </div>
-  <div class="grid2" style="margin-bottom:10px">
-    <div><div class="label">Cliente / Pagador</div><input id="cc-cliente" placeholder="A quién se cobra"/></div>
-    <div><div class="label">No. de cuenta de cobro</div><input id="cc-num" placeholder="Ej: 001-2025"/></div>
-  </div>
-  <div class="label">Concepto del cobro</div>
-  <textarea id="cc-concepto" placeholder="Ej: Servicios de supervisión e instalación de red de datos..." style="margin-bottom:10px"></textarea>
-  <div class="grid2" style="margin-bottom:10px">
-    <div><div class="label">Valor antes de retención ($)</div><input type="number" id="cc-valor" placeholder="0" oninput="calcCuenta()"/></div>
-    <div><div class="label">Retención en la fuente (%)</div><input type="number" id="cc-ret" value="3.5" oninput="calcCuenta()"/></div>
-  </div>
-  <div class="grid3" style="margin-bottom:12px">
-    <div class="metric"><div class="num" id="cc-bruto">$0</div><div class="lbl">Valor bruto</div></div>
-    <div class="metric"><div class="num" id="cc-retencion">$0</div><div class="lbl">Retención</div></div>
-    <div class="metric"><div class="num" id="cc-neto">$0</div><div class="lbl">Neto a recibir</div></div>
-  </div>
-  <button class="btn" onclick="genCuenta()">Generar cuenta de cobro</button>
-  <div class="divider"></div>
-  <div class="informe-preview" id="cc-prev">La cuenta de cobro aparecerá aquí.</div>
 </div>
 
 <!-- ASISTENTE IA -->
-<div id="asistente" class="panel">
-  <div class="section-title">Consulta técnica con IA</div>
-  <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-    <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="quickQ('¿Cuántas tomas de TV requiere una vivienda tipo 4 bajo RITEL?')">RITEL vivienda T4</button>
-    <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="quickQ('¿Qué cable se usa para CCTV IP en exteriores?')">Cable CCTV exterior</button>
-    <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="quickQ('¿Cuál es la separación máxima entre soportes en canaleta en RITEL Colombia?')">Separación soportes RITEL</button>
-    <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="quickQ('¿Qué EPP debe usar un técnico en instalación de cableado estructurado?')">EPP telecomunicaciones</button>
-  </div>
-  <div id="chat-log" style="max-height:260px;overflow-y:auto;margin-bottom:10px"></div>
-  <div class="ai-input-row">
-    <input id="ai-q" placeholder="Escribe tu consulta técnica..." onkeydown="if(event.key==='Enter')sendAI()"/>
-    <button class="btn" id="ai-btn" onclick="sendAI()">Enviar ↗</button>
+<div id="ia" class="panel">
+  <div class="card">
+    <h3>🤖 Asistente técnico con IA</h3>
+    <div style="font-size:12px;color:#666;margin-bottom:12px">Consultas sobre RITEL, NFPA 72, TIA-568, CCTV, fibra óptica, control de acceso y seguridad electrónica.</div>
+    <div style="display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap">
+      <button class="btn btn-out" style="font-size:10px;padding:3px 8px" onclick="qQ('¿Cuántas tomas de TV requiere una vivienda tipo 4 bajo RITEL?')">RITEL vivienda T4</button>
+      <button class="btn btn-out" style="font-size:10px;padding:3px 8px" onclick="qQ('¿Qué cable se usa para CCTV IP en exteriores?')">Cable CCTV exterior</button>
+      <button class="btn btn-out" style="font-size:10px;padding:3px 8px" onclick="qQ('Separación máxima entre soportes en canaleta bajo RITEL Colombia')">Soportes canaleta RITEL</button>
+      <button class="btn btn-out" style="font-size:10px;padding:3px 8px" onclick="qQ('EPP requerido para técnico en cableado estructurado en obra')">EPP en obra</button>
+      <button class="btn btn-out" style="font-size:10px;padding:3px 8px" onclick="qQ('Diferencias entre NVR y DVR en sistemas CCTV')">NVR vs DVR</button>
+      <button class="btn btn-out" style="font-size:10px;padding:3px 8px" onclick="qQ('¿Cuáles son las zonas de detección bajo NFPA 72?')">Zonas NFPA 72</button>
+      <button class="btn btn-out" style="font-size:10px;padding:3px 8px" onclick="qQ('Pérdida de inserción máxima permitida en fibra óptica multimodo')">Pérdida fibra óptica</button>
+      <button class="btn btn-out" style="font-size:10px;padding:3px 8px" onclick="qQ('¿Qué norma aplica para control de acceso en Colombia?')">Norma control acceso</button>
+    </div>
+    <div id="chat-log" style="max-height:320px;overflow-y:auto;margin-bottom:10px;min-height:80px;background:#f8f9fa;border-radius:10px;padding:10px"></div>
+    <div style="display:flex;gap:7px">
+      <input id="ai-q" placeholder="Escribe tu consulta técnica aquí..." onkeydown="if(event.key==='Enter')sendAI()" style="flex:1"/>
+      <button class="btn" id="ai-btn" onclick="sendAI()" style="min-width:90px">Enviar ↗</button>
+    </div>
+    <div style="font-size:10px;color:#aaa;margin-top:6px">Requiere conexión activa al asistente IA de Anthropic.</div>
   </div>
 </div>
 
-</div><!-- end content -->
-</div><!-- end app -->
+</div><!-- main -->
 
 <script>
+const EMP={
+  santely:{nombre:'SANTELY SAS',slogan:'Telecomunicaciones y Seguridad Electrónica',nit:'',tel:'',email:'',ciudad:'',dir:'',rep:'Nodinson Díaz',cargo:'Supervisor General'},
+  delta:{nombre:'DELTA SEGURIDAD ELECTRÓNICA',slogan:'Seguridad Electrónica Integral',nit:'',tel:'',email:'',ciudad:'',dir:'',rep:'',cargo:''},
+  custom:{nombre:'',slogan:'',nit:'',tel:'',email:'',ciudad:'',dir:'',rep:'',cargo:''}
+};
+let emp='santely';
+let logoURL='';
+
+function uploadLogo(e){
+  const file=e.target.files[0];if(!file)return;
+  const fr=new FileReader();
+  fr.onload=ev=>{
+    logoURL=ev.target.result;
+    document.getElementById('logo-img').src=logoURL;document.getElementById('logo-img').style.display='block';
+    document.getElementById('logo-ph').style.display='none';
+    document.getElementById('logo-box-img').src=logoURL;document.getElementById('logo-box-img').style.display='block';
+    document.getElementById('logo-box-txt').style.display='none';
+    document.getElementById('logo-status').textContent='✓ Logo cargado: '+file.name;
+    ['hdr-logo-cot','hdr-logo-cob'].forEach(id=>{const el=document.getElementById(id);el.src=logoURL;el.style.display='block';});
+  };
+  fr.readAsDataURL(file);
+}
+
+function setEmp(key,btn){
+  emp=key;document.querySelectorAll('.csb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  const e=EMP[key];
+  document.getElementById('p-nombre').value=e.nombre;document.getElementById('p-slogan').value=e.slogan;
+  ['nit','tel','email','ciudad','dir','rep','cargo'].forEach(f=>document.getElementById('p-'+f).value=e[f]);
+  syncP();
+}
+
+function syncP(){
+  const e=EMP[emp];
+  e.nombre=document.getElementById('p-nombre').value;e.slogan=document.getElementById('p-slogan').value;
+  ['nit','tel','email','ciudad','dir','rep','cargo'].forEach(f=>e[f]=document.getElementById('p-'+f).value);
+  const nom=e.nombre||'Empresa';
+  document.getElementById('logo-name-el').childNodes[0].textContent=nom;
+  document.getElementById('logo-sub-el').textContent=e.slogan;
+  document.getElementById('emp-act').textContent=nom;
+  const info=[e.nit?'NIT: '+e.nit:'',e.tel,e.email,e.ciudad].filter(Boolean).join('  |  ');
+  ['cot','cob'].forEach(x=>{
+    document.getElementById('hdr-nom-'+x).textContent=nom;
+    document.getElementById('hdr-dat-'+x).textContent=info||'Completa el perfil de empresa.';
+  });
+}
+
+function guardarP(){
+  syncP();const m=document.getElementById('save-ok');m.style.display='inline';
+  setTimeout(()=>m.style.display='none',2500);
+}
+
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// PRESUPUESTO
 function addRow(){
-  const d=document.getElementById('items');
-  const r=document.createElement('div');
-  r.className='item-row';
-  r.innerHTML='<input placeholder="Descripción" class="desc"/><input class="qty" type="number" placeholder="Cant." value="1" oninput="calcTotal()"/><input class="price" type="number" placeholder="Precio unit." value="0" oninput="calcTotal()"/><button class="rm" onclick="rmRow(this)">×</button>';
+  const d=document.getElementById('items');const r=document.createElement('div');r.className='item-row';
+  r.innerHTML='<input placeholder="Descripción del material o servicio" class="desc"/><input class="qty" type="number" value="1" min="0" oninput="calcT()"/><input class="price" type="number" value="0" min="0" oninput="calcT()"/><button class="rm" onclick="this.parentElement.remove();calcT()">✕</button>';
   d.appendChild(r);
 }
-function rmRow(btn){btn.parentElement.remove();calcTotal();}
-function fmt(n){return '$'+Math.round(n).toLocaleString('es-CO');}
-function calcTotal(){
-  let sub=0;
-  document.querySelectorAll('.item-row').forEach(r=>{
-    const q=parseFloat(r.querySelector('.qty').value)||0;
-    const p=parseFloat(r.querySelector('.price').value)||0;
-    sub+=q*p;
-  });
+
+const fm=n=>'$'+Math.round(n).toLocaleString('es-CO');
+function calcT(){
+  let s=0;
+  document.querySelectorAll('.item-row').forEach(r=>{s+=(parseFloat(r.querySelector('.qty').value)||0)*(parseFloat(r.querySelector('.price').value)||0);});
   const aiu=(parseFloat(document.getElementById('aiu').value)||0)/100;
-  const aiuV=sub*aiu;
-  const base=sub+aiuV;
-  const iva=base*0.19;
-  const tot=base+iva;
-  document.getElementById('subtotal').textContent=fmt(sub);
-  document.getElementById('aiuVal').textContent=fmt(aiuV);
-  document.getElementById('iva').textContent=fmt(iva);
-  document.getElementById('total').textContent=fmt(tot);
+  const dsc=(parseFloat(document.getElementById('desc-pct').value)||0)/100;
+  const conIva=parseInt(document.getElementById('incluir-iva').value);
+  const av=s*aiu;const base=(s+av)*(1-dsc);const iva=conIva?base*0.19:0;const tot=base+iva;
+  document.getElementById('sub').textContent=fm(s);document.getElementById('aiuv').textContent=fm(av);
+  document.getElementById('ivav').textContent=fm(iva);document.getElementById('totv').textContent=fm(tot);
 }
 
-// CHECKLIST
-const defaultChecks=[
+const NORMAS={
+  ritel:[{id:'rn1',l:'Número de tomas por unidad residencial'},{id:'rn2',l:'Cable instalado (tipo y calibre)'},{id:'rn3',l:'Tipo de canaleta / tubería utilizada'},{id:'rn4',l:'Estado del cuarto de telecomunicaciones'},{id:'rn5',l:'Etiquetado conforme a planos (Conforme/Parcial/No conforme)'},{id:'rn6',l:'Cajas de registro instaladas y selladas (Sí/No)'}],
+  cctv:[{id:'cn1',l:'Cámaras instaladas / total planificado'},{id:'cn2',l:'Tipo de cámara (IP/analógica/PTZ/bullet/domo)'},{id:'cn3',l:'Resolución configurada (MP)'},{id:'cn4',l:'Almacenamiento disponible (TB)'},{id:'cn5',l:'Cobertura verificada (áreas / ángulos cubiertos)'},{id:'cn6',l:'Acceso remoto configurado (Sí/No)'}],
+  incendio:[{id:'nn1',l:'Número de detectores instalados'},{id:'nn2',l:'Tipo de detector (humo/calor/llama/multisensor)'},{id:'nn3',l:'Zonas de detección configuradas'},{id:'nn4',l:'Prueba funcional de panel realizada (Sí/No)'},{id:'nn5',l:'Batería de respaldo verificada y en carga'},{id:'nn6',l:'Bocinas / Sirenas probadas (Sí/No)'}],
+  datos:[{id:'tn1',l:'Puntos de red certificados / total'},{id:'tn2',l:'Categoría de cableado (Cat5e/Cat6/Cat6A/Cat7)'},{id:'tn3',l:'Equipo de certificación utilizado'},{id:'tn4',l:'Resultado NEXT / PSNEXT (Aprobado/Falla)'},{id:'tn5',l:'Patch panel instalado y etiquetado (Sí/No)'},{id:'tn6',l:'Switch instalado y operativo (Sí/No)'}],
+  acceso:[{id:'an1',l:'Número de lectores instalados'},{id:'an2',l:'Tipo de credencial (tarjeta RFID / biométrico / PIN / mixto)'},{id:'an3',l:'Panel de control configurado y programado (Sí/No)'},{id:'an4',l:'Puertas electromagnéticas probadas con fuerza de retención verificada'},{id:'an5',l:'Base de datos de usuarios cargada (Sí/No)'},{id:'an6',l:'Integración con CCTV (Sí/No/No aplica)'}],
+  fibra:[{id:'fn1',l:'Tipo de fibra (monomodo OS2 / multimodo OM3 / OM4)'},{id:'fn2',l:'Número de hilos instalados'},{id:'fn3',l:'Pérdida de inserción medida (dB)'},{id:'fn4',l:'Tipo de conectores (SC/LC/FC/ST)'},{id:'fn5',l:'ODF instalado y etiquetado correctamente (Sí/No)'},{id:'fn6',l:'Prueba OTDR realizada y documentada (Sí/No)'}],
+};
+let infTab='ritel';
+function setTab(t,btn){infTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderNorma();}
+function renderNorma(){
+  const f=NORMAS[infTab]||[];
+  const tt={ritel:'RITEL / TDT',cctv:'CCTV / Videovigilancia',incendio:'NFPA 72 — Detección de incendio',datos:'TIA-568 — Red de datos',acceso:'Control de acceso',fibra:'Fibra óptica'}[infTab];
+  let h='<div class="norma-box"><div class="nb-t">📋 Campos específicos — '+tt+'</div><div class="g2">';
+  f.forEach(x=>h+=`<div class="field-row"><div class="lbl">${x.l}</div><input id="${x.id}" placeholder=""/></div>`);
+  h+='</div></div>';
+  document.getElementById('norma-fields').innerHTML=h;
+}
+renderNorma();
+
+const CHK_DATA=[
   {t:'Planos actualizados y aprobados en sitio',c:'RITEL',done:false},
-  {t:'Canaletas instaladas con separación ≤ 150 cm entre soportes',c:'RITEL',done:false},
+  {t:'Separación entre soportes de canaleta ≤ 150 cm',c:'RITEL',done:false},
   {t:'Cuarto de telecomunicaciones ventilado y señalizado',c:'RITEL',done:false},
-  {t:'Etiquetado de puntos conforme a planos',c:'RITEL',done:false},
-  {t:'Cámaras instaladas en ángulos de cobertura óptimos',c:'CCTV',done:false},
-  {t:'DVR/NVR energizado y con espacio en disco verificado',c:'CCTV',done:false},
-  {t:'Cable UTP pasado por tubería / canaleta continua',c:'Red',done:false},
-  {t:'Certificación de puntos de datos',c:'Red',done:false},
+  {t:'Canaleta instalada con tapa y correctamente anclada',c:'RITEL',done:false},
+  {t:'Etiquetado de puntos conforme a planos aprobados',c:'RITEL',done:false},
+  {t:'Cajas de registro instaladas y selladas',c:'RITEL',done:false},
+  {t:'Tuberías y ductos libres de obstrucciones',c:'RITEL',done:false},
+  {t:'Cámaras en ángulos de cobertura verificados y aprobados',c:'CCTV',done:false},
+  {t:'DVR/NVR energizado y capacidad de disco verificada',c:'CCTV',done:false},
+  {t:'Cableado de cámaras en tubería continua y protegida',c:'CCTV',done:false},
+  {t:'Grabación y reproducción probadas correctamente',c:'CCTV',done:false},
+  {t:'Visión nocturna activa y funcional',c:'CCTV',done:false},
+  {t:'Acceso remoto configurado y verificado',c:'CCTV',done:false},
+  {t:'Cable UTP en tubería o canaleta continua',c:'Red',done:false},
+  {t:'Certificación de puntos de datos realizada',c:'Red',done:false},
+  {t:'Patch panel instalado y etiquetado correctamente',c:'Red',done:false},
+  {t:'Switch conectado y puertos probados con tráfico',c:'Red',done:false},
+  {t:'Rack / gabinete organizado y con gestión de cable',c:'Red',done:false},
   {t:'Detectores de humo instalados conforme a NFPA 72',c:'Incendio',done:false},
-  {t:'Panel de alarma operativo y con batería de respaldo',c:'Incendio',done:false},
-  {t:'Personal con EPP completo en obra',c:'General',done:false},
-  {t:'Área de trabajo despejada y señalizada',c:'General',done:false},
+  {t:'Panel de alarma operativo con batería de respaldo activa',c:'Incendio',done:false},
+  {t:'Sirenas y luces estroboscópicas probadas',c:'Incendio',done:false},
+  {t:'Zonas de detección configuradas y documentadas',c:'Incendio',done:false},
+  {t:'Prueba funcional completa de la central de alarma',c:'Incendio',done:false},
+  {t:'Empalmes de fibra con pérdida < 0.3 dB por empalme',c:'Fibra',done:false},
+  {t:'ODF instalado y etiquetado correctamente',c:'Fibra',done:false},
+  {t:'Prueba OTDR realizada y documentada',c:'Fibra',done:false},
+  {t:'Conectores limpios e inspeccionados con microscopio',c:'Fibra',done:false},
+  {t:'Lectores de acceso probados con credenciales válidas',c:'Acceso',done:false},
+  {t:'Puertas electromagnéticas con fuerza de retención verificada',c:'Acceso',done:false},
+  {t:'Panel de control de acceso configurado y con usuarios cargados',c:'Acceso',done:false},
+  {t:'Integración con central de alarma o CCTV verificada',c:'Acceso',done:false},
+  {t:'Casco y botas de seguridad dieléctrica en uso',c:'EPP',done:false},
+  {t:'Arnés de seguridad para trabajos en altura (> 1.5 m)',c:'EPP',done:false},
+  {t:'Guantes dieléctricos para trabajos en tableros eléctricos',c:'EPP',done:false},
+  {t:'Gafas de seguridad para labores de corte y perforación',c:'EPP',done:false},
+  {t:'Tapabocas / respirador para ambientes con polvo',c:'EPP',done:false},
+  {t:'Señalización de área de trabajo activa y visible',c:'General',done:false},
+  {t:'Orden y aseo al finalizar cada jornada',c:'General',done:false},
+  {t:'Herramientas inventariadas y en buen estado',c:'General',done:false},
+  {t:'Equipos y materiales protegidos del agua y polvo',c:'General',done:false},
+  {t:'Registro fotográfico del avance realizado',c:'General',done:false},
 ];
-let checks=[...defaultChecks.map(x=>({...x}))];
-function renderChecks(){
-  const cat=document.getElementById('cat-filter').value;
-  const filtered=checks.filter(c=>!cat||c.c===cat);
-  const done=filtered.filter(c=>c.done).length;
-  document.getElementById('prog-text').textContent=done+' / '+filtered.length;
-  const pct=filtered.length?Math.round(done/filtered.length*100):0;
-  document.getElementById('prog-bar').style.width=pct+'%';
-  const el=document.getElementById('check-list');
-  el.innerHTML='';
-  checks.forEach((ck,i)=>{
+let chks=CHK_DATA.map(x=>({...x}));
+function renderChk(){
+  const cat=document.getElementById('cat-f').value;
+  const f=chks.filter(c=>!cat||c.c===cat);
+  const done=f.filter(c=>c.done).length;
+  document.getElementById('prog-txt').textContent=done+'/'+f.length+' ítems completados — '+Math.round(done/(f.length||1)*100)+'%';
+  document.getElementById('prog-bar').style.width=Math.round(done/(f.length||1)*100)+'%';
+  const el=document.getElementById('chk-list');el.innerHTML='';
+  chks.forEach(ck=>{
     if(cat&&ck.c!==cat)return;
-    const d=document.createElement('div');
-    d.className='check-item'+(ck.done?' done':'');
-    d.innerHTML='<input type="checkbox"'+(ck.done?' checked':'')+'><span>'+ck.t+'</span><span class="badge '+(ck.done?'ok':'pend')+'">'+ck.c+'</span>';
-    d.querySelector('input').onchange=function(){ck.done=this.checked;renderChecks();};
+    const d=document.createElement('div');d.className='check-item'+(ck.done?' done':'');
+    d.innerHTML='<input type="checkbox"'+(ck.done?' checked':'')+'><span class="ct">'+ck.t+'</span><span class="badge b'+ck.c+'">'+ck.c+'</span>';
+    d.querySelector('input').onchange=function(){ck.done=this.checked;renderChk();};
     el.appendChild(d);
   });
 }
-function addCheck(){
-  const v=document.getElementById('new-check').value.trim();
-  if(!v)return;
-  checks.push({t:v,c:document.getElementById('new-cat').value,done:false});
-  document.getElementById('new-check').value='';
-  renderChecks();
+function addChk(){
+  const v=document.getElementById('new-chk').value.trim();if(!v)return;
+  chks.push({t:v,c:document.getElementById('new-cat').value,done:false});
+  document.getElementById('new-chk').value='';renderChk();
 }
-renderChecks();
+function resetChk(){if(confirm('¿Resetear todos los ítems como pendientes?')){chks.forEach(c=>c.done=false);renderChk();}}
+renderChk();
 
-// INFORME
-let infTab='ritel';
-function setTab(t,btn){infTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-function genInforme(){
-  const p=document.getElementById('inf-proj').value||'(sin nombre)';
-  const d=document.getElementById('inf-date').value||new Date().toISOString().split('T')[0];
-  const s=document.getElementById('inf-sup').value||'Supervisor';
-  const e=document.getElementById('inf-estado').value;
-  const o=document.getElementById('inf-obs').value||'Sin observaciones registradas.';
-  const a=document.getElementById('inf-acc').value||'Sin compromisos registrados.';
-  const tit={'ritel':'RITEL / TDT','cctv':'CCTV / Videovigilancia','incendio':'Detección de Incendio'}[infTab];
-  const txt=`INFORME TÉCNICO — ${tit.toUpperCase()}
-${'─'.repeat(42)}
-Proyecto    : ${p}
-Fecha       : ${d}
-Supervisor  : ${s}
-Estado      : ${e}
+function getPL(){
+  const e=EMP[emp];
+  return [e.nit?'NIT: '+e.nit:'',e.tel?'Tel: '+e.tel:'',e.email?'Correo: '+e.email:'',e.ciudad?'Ciudad: '+e.ciudad:'',e.dir?'Dir: '+e.dir:'',e.rep?'Rep. Legal: '+e.rep+(e.cargo?' — '+e.cargo:''):''].filter(Boolean);
+}
 
-HALLAZGOS / OBSERVACIONES:
-${o}
+function previewCot(){
+  const e=EMP[emp];
+  const cli=document.getElementById('cli').value||'(cliente)';
+  const proj=document.getElementById('proj').value||'(proyecto)';
+  const num=document.getElementById('cot-num').value||'COT-001';
+  const fecha=document.getElementById('cot-fecha').value||'';
+  const sys=document.getElementById('sys').value;
+  const val=document.getElementById('cot-val').value||'30 días';
+  const pago=document.getElementById('cot-pago').value||'—';
+  const obs2=document.getElementById('cot-obs').value;
+  let s=0;const rows=[];
+  document.querySelectorAll('.item-row').forEach((r,i)=>{
+    const desc=r.querySelector('.desc').value||'Ítem '+(i+1);
+    const q=parseFloat(r.querySelector('.qty').value)||0;const p=parseFloat(r.querySelector('.price').value)||0;
+    s+=q*p;rows.push(`  ${String(i+1).padStart(2,'0')}. ${desc.substring(0,30).padEnd(30)} ${String(q).padStart(4)} un   ${fm(p).padStart(13)}   ${fm(q*p).padStart(15)}`);
+  });
+  const aiu=(parseFloat(document.getElementById('aiu').value)||0)/100;
+  const dsc=(parseFloat(document.getElementById('desc-pct').value)||0)/100;
+  const conIva=parseInt(document.getElementById('incluir-iva').value);
+  const av=s*aiu;const base=(s+av)*(1-dsc);const iva=conIva?base*0.19:0;const tot=base+iva;
+  const txt=`COTIZACIÓN No. ${num}\n${'═'.repeat(58)}\nEMPRESA OFERENTE:\n  ${e.nombre}\n${getPL().map(l=>'  '+l).join('\n')}\n\nCLIENTE: ${cli}\nPROYECTO: ${proj}\nSISTEMA: ${sys}\nFECHA: ${fecha}       VALIDEZ: ${val}\nFORMA DE PAGO: ${pago}\n\n${'─'.repeat(58)}\n  #   DESCRIPCIÓN                              CANT      VR. UNIT.        VR. TOTAL\n${'─'.repeat(58)}\n${rows.join('\n')}\n${'─'.repeat(58)}\n  Subtotal neto:                                                ${fm(s).padStart(16)}\n  AIU (${((aiu)*100).toFixed(0)}%):                                                   ${fm(av).padStart(16)}\n${dsc>0?`  Descuento (${(dsc*100).toFixed(0)}%):                                              ${fm((s+av)*dsc).padStart(16)}\n`:''}  IVA 19%:                                                       ${fm(iva).padStart(16)}\n${'─'.repeat(58)}\n  TOTAL DE LA OFERTA:                                            ${fm(tot).padStart(16)}\n${'═'.repeat(58)}\n${obs2?'ALCANCE / OBSERVACIONES:\n'+obs2+'\n'+('─'.repeat(58))+'\n':''}\nFirma y sello: _______________________\n${e.rep||'_______________________'}  |  ${e.cargo||''}\n${e.nombre}`;
+  document.getElementById('cot-prev').textContent=txt;
+  return txt;
+}
 
-ACCIONES / COMPROMISOS:
-${a}
-
-${'─'.repeat(42)}
-Generado por: Panel Técnico Santely SAS`;
+function previewInf(){
+  const e=EMP[emp];
+  const p=document.getElementById('inf-proj').value||'(proyecto)';
+  const d=document.getElementById('inf-date').value||'';
+  const s=document.getElementById('inf-sup').value||e.rep||'Supervisor';
+  const est=document.getElementById('inf-est').value;
+  const av=document.getElementById('inf-av').value||'N/D';
+  const ot=document.getElementById('inf-ot').value||'—';
+  const nv=document.getElementById('inf-nv').value||'Por definir';
+  const obs=document.getElementById('inf-obs').value||'Sin observaciones registradas.';
+  const acc=document.getElementById('inf-acc').value||'Sin compromisos registrados.';
+  const tt={ritel:'RITEL / TDT',cctv:'CCTV / Videovigilancia',incendio:'NFPA 72 — Detección de incendio',datos:'TIA-568 — Red de datos',acceso:'Control de acceso',fibra:'Fibra óptica'}[infTab];
+  const f=NORMAS[infTab]||[];
+  let esp='';f.forEach(x=>{const el=document.getElementById(x.id);if(el)esp+=`  • ${x.l}: ${el.value||'—'}\n`;});
+  const txt=`INFORME TÉCNICO — ${tt.toUpperCase()}\n${'═'.repeat(54)}\nEMPRESA: ${e.nombre}\n${getPL().map(l=>'  '+l).join('\n')}\n\nProyecto     : ${p}\nContrato/OT  : ${ot}\nFecha visita : ${d}\nSupervisor   : ${s}\nEstado       : ${est}       Avance: ${av}%\nPróxima visita: ${nv}\n\n${'─'.repeat(54)}\nCAMPOS ESPECÍFICOS — ${tt.toUpperCase()}:\n${esp}\n${'─'.repeat(54)}\nHALLAZGOS / OBSERVACIONES TÉCNICAS:\n${obs.split('\n').map(l=>'  '+l).join('\n')}\n\n${'─'.repeat(54)}\nACCIONES CORRECTIVAS / COMPROMISOS:\n${acc.split('\n').map(l=>'  '+l).join('\n')}\n\n${'═'.repeat(54)}\nFirma: _______________________\n${s}  |  ${e.cargo||'Supervisor'}\n${e.nombre}`;
   document.getElementById('inf-prev').textContent=txt;
+  return txt;
 }
 
-// CUENTA DE COBRO
-function calcCuenta(){
-  const v=parseFloat(document.getElementById('cc-valor').value)||0;
+function calcCC(){
+  const v=parseFloat(document.getElementById('cc-val').value)||0;
   const r=(parseFloat(document.getElementById('cc-ret').value)||0)/100;
-  const ret=v*r;
-  const neto=v-ret;
-  document.getElementById('cc-bruto').textContent=fmt(v);
-  document.getElementById('cc-retencion').textContent=fmt(ret);
-  document.getElementById('cc-neto').textContent=fmt(neto);
+  const ded=parseFloat(document.getElementById('cc-ded').value)||0;
+  document.getElementById('cc-b').textContent=fm(v);
+  document.getElementById('cc-r').textContent=fm(v*r);
+  document.getElementById('cc-n').textContent=fm(v-v*r-ded);
 }
-function genCuenta(){
-  const nom=document.getElementById('cc-nom').value||'(Nombre)';
-  const nit=document.getElementById('cc-nit').value||'(ID)';
-  const banco=document.getElementById('cc-banco').value||'(Banco)';
-  const cta=document.getElementById('cc-cuenta').value||'(Cuenta)';
-  const cli=document.getElementById('cc-cliente').value||'(Cliente)';
+function previewCC(){
+  const e=EMP[emp];
   const num=document.getElementById('cc-num').value||'001';
-  const con=document.getElementById('cc-concepto').value||'(Concepto)';
-  const v=parseFloat(document.getElementById('cc-valor').value)||0;
+  const fecha=document.getElementById('cc-fecha').value||'';
+  const ciudad=document.getElementById('cc-ciudad').value||e.ciudad||'';
+  const cli=document.getElementById('cc-cli').value||'(cliente)';
+  const nitCli=document.getElementById('cc-nit-cli').value||'—';
+  const banco=document.getElementById('cc-banco').value||'—';
+  const cta=document.getElementById('cc-cta').value||'—';
+  const tipo=document.getElementById('cc-tipo').value;
+  const con=document.getElementById('cc-con').value||'(concepto)';
+  const v=parseFloat(document.getElementById('cc-val').value)||0;
   const r=(parseFloat(document.getElementById('cc-ret').value)||0)/100;
-  const ret=v*r;
-  const neto=v-ret;
-  const d=new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
-  const txt=`CUENTA DE COBRO No. ${num}
-${'─'.repeat(42)}
-Fecha         : ${d}
-
-COBRADOR:
-  Nombre/Empresa : ${nom}
-  NIT / Cédula   : ${nit}
-  Banco          : ${banco}
-  No. Cuenta     : ${cta}
-
-A CARGO DE:
-  ${cli}
-
-CONCEPTO:
-  ${con}
-
-LIQUIDACIÓN:
-  Valor bruto          : ${fmt(v)}
-  Retención en la fuente: ${fmt(ret)}
-  ─────────────────────────
-  NETO A RECIBIR       : ${fmt(neto)}
-
-${'─'.repeat(42)}
-Firma: _________________________
-       ${nom}`;
+  const ded=parseFloat(document.getElementById('cc-ded').value)||0;
+  const txt=`CUENTA DE COBRO No. ${num}\n${'═'.repeat(52)}\nCiudad: ${ciudad}       Fecha: ${fecha}\n\nCOBRADOR:\n  ${e.nombre}\n${getPL().map(l=>'  '+l).join('\n')}\n  Banco: ${banco}\n  Tipo de cuenta: Cuenta de ${tipo}: ${cta}\n\n${'─'.repeat(52)}\nA CARGO DE:\n  ${cli}${nitCli!=='—'?'  |  NIT: '+nitCli:''}\n\nCONCEPTO DEL COBRO:\n  ${con}\n\n${'─'.repeat(52)}\nLIQUIDACIÓN:\n  Valor bruto              :   ${fm(v)}\n  Retención en la fuente   :  (${fm(v*r)})\n${ded>0?`  Otras deducciones        :  (${fm(ded)})\n`:''} ${'─'.repeat(36)}\n  VALOR NETO A RECIBIR     :   ${fm(v-v*r-ded)}\n${'═'.repeat(52)}\n\nFirma y sello: _______________________\n${e.rep||e.nombre}\n${e.cargo||''}\n${e.nombre}`;
   document.getElementById('cc-prev').textContent=txt;
+  return txt;
 }
 
-// ASISTENTE IA
-function addBubble(txt,who){
-  const el=document.getElementById('chat-log');
-  const b=document.createElement('div');
-  b.className='ai-bubble '+who;
-  b.textContent=txt;
-  el.appendChild(b);
-  el.scrollTop=el.scrollHeight;
-  return b;
-}
-function quickQ(q){
-  document.getElementById('ai-q').value=q;
-  sendAI();
-}
-async function sendAI(){
-  const q=document.getElementById('ai-q').value.trim();
-  if(!q)return;
-  document.getElementById('ai-q').value='';
-  addBubble(q,'user');
-  const btn=document.getElementById('ai-btn');
-  btn.disabled=true;
-  btn.innerHTML='<span class="spinner"></span>Consultando...';
-  const botB=addBubble('...','bot');
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:'Eres un asistente técnico experto en telecomunicaciones, RITEL Colombia, NFPA 72, CCTV, redes de datos y seguridad electrónica. Responde de forma directa, concisa y técnica. Usa viñetas cuando sea útil. Responde en español.',
-        messages:[{role:'user',content:q}]
-      })
+function getTxt(tipo){
+  if(tipo==='cotizacion')return previewCot();
+  if(tipo==='informe')return previewInf();
+  if(tipo==='cuenta')return previewCC();
+  if(tipo==='checklist'){
+    const cat=document.getElementById('cat-f').value;
+    const f=chks.filter(c=>!cat||c.c===cat);
+    const done=f.filter(c=>c.done).length;
+    let t=`CHECKLIST DE VERIFICACIÓN — ${cat||'TODAS LAS CATEGORÍAS'}\n${'═'.repeat(52)}\nEmpresa: ${EMP[emp].nombre}\nFecha: ${new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'})}\nAvance: ${done}/${f.length} ítems (${Math.round(done/(f.length||1)*100)}%)\n${'─'.repeat(52)}\n`;
+    let lastCat='';
+    f.forEach((c,i)=>{
+      if(c.c!==lastCat){t+=`\n[${c.c.toUpperCase()}]\n`;lastCat=c.c;}
+      t+=`  [${c.done?'✓':' '}] ${String(i+1).padStart(2,'0')}. ${c.t}\n`;
     });
-    const data=await res.json();
-    const txt=data.content?.find(b=>b.type==='text')?.text||'Sin respuesta.';
-    botB.textContent=txt;
-  }catch(e){
-    botB.textContent='Error al consultar. Verifica la conexión.';
+    t+=`\n${'═'.repeat(52)}\nSupervisor: _______________________\nFirma: _______________________`;
+    return t;
   }
-  btn.disabled=false;
-  btn.innerHTML='Enviar ↗';
+  return '';
 }
+
+async function doExport(tipo,fmt){
+  const txt=getTxt(tipo);
+  const empresa=EMP[emp].nombre;
+  const tit={cotizacion:'Cotización',informe:'Informe Técnico',cuenta:'Cuenta de Cobro',checklist:'Checklist de verificación'}[tipo];
+  const prompt=`Genera y descarga este documento como archivo ${fmt.toUpperCase()} profesional.\n\nEmpresa: ${empresa}\nDocumento: ${tit}\nContenido:\n\n${txt}`;
+  if(typeof sendPrompt==='function'){sendPrompt(prompt);}
+  else{alert('Copia el texto del panel de vista previa y pégalo en el chat de Claude para generar el archivo '+fmt.toUpperCase()+'.\n\nO abre este panel en claude.ai para usar la exportación directa.');}
+}
+
+function addBub(txt,who){
+  const el=document.getElementById('chat-log');
+  const b=document.createElement('div');b.className='ai-bub '+who;b.textContent=txt;
+  el.appendChild(b);el.scrollTop=el.scrollHeight;return b;
+}
+function qQ(q){document.getElementById('ai-q').value=q;sendAI();}
+async function sendAI(){
+  const q=document.getElementById('ai-q').value.trim();if(!q)return;
+  document.getElementById('ai-q').value='';addBub(q,'user');
+  const btn=document.getElementById('ai-btn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Consultando...';
+  const b=addBub('Consultando asistente técnico...','bot');
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'Eres asistente técnico experto en telecomunicaciones, RITEL Colombia, NFPA 72, TIA-568, CCTV, fibra óptica, control de acceso y seguridad electrónica. Responde directo, conciso y técnico. Usa viñetas si aplica. Solo en español. Sé específico con normas y estándares aplicables en Colombia.',messages:[{role:'user',content:q}]})});
+    const data=await r.json();
+    b.textContent=data.content?.find(x=>x.type==='text')?.text||'Sin respuesta del asistente.';
+  }catch(e){b.textContent='Error de conexión. Verifica la conexión a internet e intenta de nuevo.';}
+  btn.disabled=false;btn.innerHTML='Enviar ↗';
+}
+
+['cot-fecha','cc-fecha','inf-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=new Date().toISOString().split('T')[0];});
 </script>
+</body>
+</html>
